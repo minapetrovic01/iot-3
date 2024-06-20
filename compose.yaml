@@ -1,0 +1,34 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    volumes:
+      - ./config:/mosquitto/config
+      - ./data:/mosquitto/data
+      - ./log:/mosquitto/log
+    ports:
+      - 1883:1883
+      - 9001:9001
+    stdin_open: true 
+    tty: true
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: pillowdb3
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data1:/data/db
+  nats-server:
+    image: nats
+    container_name: nats-server
+    ports:
+      - "4222:4222"
+  # sensor:
+  #   image: sensor
+  #   container_name: sensor
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - mongodb
+
+  
