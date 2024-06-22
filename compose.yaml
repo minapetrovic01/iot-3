@@ -34,10 +34,42 @@ services:
       - DOCKER_INFLUXDB_INIT_PASSWORD=root123456
       - DOCKER_INFLUXDB_INIT_ORG=mina.org
       - DOCKER_INFLUXDB_INIT_BUCKET=sensor_data
-      - DOCKER_INFLUXDB_INIT_RETENTION=1w
+      - DOCKER_INFLUXDB_INIT_RETENTION=30d
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
     volumes:
       - ./influxdb_data:/var/lib/influxdb2
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+  emanager:
+    image: emqx/ekuiper-manager:1.8
+    container_name: emanager
+    ports:
+      - "9082:9082"
+    restart: unless-stopped	
+    environment:
+      - DEFAULT_EKUIPER_ENDPOINT=http://ekupier:9081
+  ekupier:
+    image: lfedge/ekuiper:latest
+    ports:
+      - "9081:9081"
+    container_name: ekupier
+    restart: unless-stopped
+    user: root
+    volumes:
+      - ./eKupier/data:/kupier/data
+      - ./eKupier/log:/kupier/log
+    environment:
+      MQTT_SOURCE__DEFAULT__SERVER: "tcp://mosquitto:1883"
+      KUPIER__BASIC__CONSOLELOG: "true"
+      KUPIER__BASIC__IGNORECASE: "false"
+    depends_on:
+      - mosquitto
+    
   # sensor:
   #   image: sensor
   #   container_name: sensor

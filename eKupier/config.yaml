@@ -1,0 +1,21 @@
+mqttSource:
+  broker: tcp://mosquitto:1883
+  topic: sensor/test/data
+
+mqttSink:
+  broker: tcp://mosquitto:1883
+  topic: sensor/test/filtered_data
+
+rules:
+  # Example rule to filter messages based on heartRate property
+  - sql: "SELECT * FROM sensor_data_topic WHERE CAST(payload AS JSON).heartRate > 80"
+    actions:
+      - mqtt_publish:
+          topic: sensor/test/filtered_data
+          payload_format: json
+
+log:
+  level: info  # Adjust log level as needed (debug, info, warn, error)
+  format: text  # Specify log format (text or json)
+  output:
+    - console  # Output to console
