@@ -9,6 +9,8 @@ services:
     ports:
       - 1883:1883
       - 9001:9001
+    networks:
+      - iot3
     stdin_open: true 
     tty: true
   mongodb:
@@ -18,11 +20,15 @@ services:
       - "27017:27017"
     volumes:
       - ./data1:/data/db
+    networks:
+      - iot3
   nats-server:
     image: nats
     container_name: nats-server
     ports:
       - "4222:4222"
+    networks:
+      - iot3
   influxdb:
     image: influxdb:2.0
     container_name: influxdb
@@ -38,6 +44,8 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
     volumes:
       - ./influxdb_data:/var/lib/influxdb2
+    networks:
+      - iot3
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -45,6 +53,8 @@ services:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - iot3
   emanager:
     image: emqx/ekuiper-manager:1.8
     container_name: emanager
@@ -53,6 +63,8 @@ services:
     restart: unless-stopped	
     environment:
       - DEFAULT_EKUIPER_ENDPOINT=http://ekupier:9081
+    networks:
+      - iot3
   ekupier:
     image: lfedge/ekuiper:latest
     ports:
@@ -61,14 +73,19 @@ services:
     restart: unless-stopped
     user: root
     volumes:
-      - ./eKupier/data:/kupier/data
-      - ./eKupier/log:/kupier/log
+      - /tmp/data:/kuiper/data
+      - /tmp/log:/kuiper/log
     environment:
       MQTT_SOURCE__DEFAULT__SERVER: "tcp://mosquitto:1883"
       KUPIER__BASIC__CONSOLELOG: "true"
       KUPIER__BASIC__IGNORECASE: "false"
     depends_on:
       - mosquitto
+    networks:
+      - iot3
+networks:
+  iot3:
+    driver: bridge
     
   # sensor:
   #   image: sensor

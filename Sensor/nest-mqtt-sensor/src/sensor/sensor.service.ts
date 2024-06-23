@@ -66,6 +66,7 @@ export class SensorService implements OnModuleInit, OnModuleDestroy {
             const data = await this.pillowModel.findOne().skip(this.currentIndex).exec();
             if (data) {
                 this.publish('sensor/test/data', JSON.stringify(data));
+                // this.publish('sensor', JSON.stringify(data));
                 this.logger.log('Cron job is running and data published');
             } else {
                 this.logger.warn('No data found at the current index');
