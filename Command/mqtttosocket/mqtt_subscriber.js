@@ -4,14 +4,14 @@ const mqtt = require('mqtt');
 const WebSocket = require('ws');
 
 // MQTT connection
-// const mqttClient = mqtt.connect('mqtt://mosquitto:1883'); // Replace with your MQTT broker URL
-const mqttClient = mqtt.connect('mqtt://localhost:1883');
+const mqttClient = mqtt.connect('mqtt://mosquitto:1883'); // Replace with your MQTT broker URL
+// const mqttClient = mqtt.connect('mqtt://localhost:1883');
 // WebSocket server
 const wss = new WebSocket.Server({ port: 8080 }); // WebSocket server port
 
 mqttClient.on('connect', () => {
     console.log('Connected to MQTT broker');
-    mqttClient.subscribe('sensor/test/data'); // Replace with your MQTT topic
+    mqttClient.subscribe('filtered'); // Replace with your MQTT topic
 });
 
 mqttClient.on('message', (topic, message) => {

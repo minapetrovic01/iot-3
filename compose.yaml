@@ -119,14 +119,13 @@ services:
     depends_on:
       - influxdb
       - filter
-
-  # command_server:
-  #   image: command_image
-  #   container_name: command_server
-  #   ports:
-  #     - "8888:8080"
-  #   networks:
-  #     - BRIDGE
+  command_server:
+    image: command_image
+    container_name: command_server
+    ports:
+      - "8888:8080"
+    networks:
+      - BRIDGE
   # web_page:
   #   image: nginx:latest
   #   container_name: web_page
