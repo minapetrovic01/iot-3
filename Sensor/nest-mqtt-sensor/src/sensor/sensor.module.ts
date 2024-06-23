@@ -4,8 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Pillow, PillowSchema } from './pillow.model';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Pillow.name, schema: PillowSchema }])],
-  // imports: [MongooseModule.forFeature([{ name: "pillowdb", schema: "pillow" }])],
+  // imports: [MongooseModule.forFeature([{ name: Pillow.name, schema: PillowSchema }])],
+  imports: [MongooseModule.forFeature([{ name: "pillowdb", schema: "pillow" }])],
   providers: [SensorService]
 })
 export class SensorModule {}

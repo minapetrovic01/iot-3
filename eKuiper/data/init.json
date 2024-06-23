@@ -1,0 +1,9 @@
+{
+    "streams": {
+      "measurements_stream": "\n              CREATE STREAM measurements_stream\n              ()\n              WITH (DATASOURCE=\"sensor/test/data\", FORMAT=\"json\", TYPE=\"mqtt\", SHARED=\"false\", TIMESTAMP=\"_time\", TIMESTAMP_FORMAT=\"ISO8601\", );\n          "
+    },
+    "tables": {},
+    "rules": {
+      "filter_heart_rate": "{\"id\":\"filter_heart_rate\",\"name\":\"Filter messages where heartRate > 60 and publish to 'filtered' topic. \",\"triggered\":true,\"sql\":\"SELECT * FROM measurements_stream WHERE heartRate > 60;\",\"actions\":[{\"mqtt\":{\"server\":\"mqtt://mosquitto:1883\",\"topic\":\"filtered\",\"omitIfEmpty\":false,\"sendSingle\":true,\"format\":\"json\",\"bufferLength\":1024,\"enableCache\":false,\"runAsync\":false}}],\"options\":{\"debug\":false,\"logFilename\":\"\",\"isEventTime\":false,\"lateTolerance\":1000,\"concurrency\":1,\"bufferLength\":1024,\"sendMetaToSink\":false,\"sendError\":true,\"qos\":0,\"checkpointInterval\":300000,\"cron\":\"\",\"duration\":\"\",\"cronDatetimeRange\":null,\"restartStrategy\":{\"attempts\":0,\"delay\":1000,\"multiplier\":2,\"maxDelay\":30000,\"jitterFactor\":0.1}}}"
+    }
+  }

@@ -83,8 +83,9 @@ services:
     restart: unless-stopped
     user: root
     volumes:
-      - /tmp/data:/kuiper/data
-      - /tmp/log:/kuiper/log
+      - ./eKuiper/data/init.json:/kuiper/data/init.json:ro
+      # - /tmp/data:/kuiper/data
+      # - /tmp/log:/kuiper/log
     environment:
       MQTT_SOURCE__DEFAULT__SERVER: "tcp://mosquitto:1883"
       KUPIER__BASIC__CONSOLELOG: "true"
@@ -93,16 +94,35 @@ services:
       - mosquitto
     networks:
       - BRIDGE
+  sensor:
+    image: sensor
+    container_name: sensor
+    ports:
+      - "3001:3001"
+    networks:
+      - BRIDGE
+    depends_on:
+      - mongodb
+
+  # command_server:
+  #   image: command_image
+  #   container_name: command_server
+  #   ports:
+  #     - "8888:8080"
+  #   networks:
+  #     - BRIDGE
+  # web_page:
+  #   image: nginx:latest
+  #   container_name: web_page
+  #   volumes:
+  #     - ./Command/mqtttosocket/index.html:/usr/share/nginx/html/index.html
+  #   ports:
+  #     - "80:80"
+  #   networks:
+  #     - BRIDGE
 networks:
   BRIDGE:
     driver: bridge
     
-  # sensor:
-  #   image: sensor
-  #   container_name: sensor
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - mongodb
-
+  
   

@@ -15,8 +15,8 @@ export class SensorService implements OnModuleInit, OnModuleDestroy {
 
     constructor(@InjectModel('Pillow') private readonly pillowModel: Model<Pillow>) { }
     onModuleInit() {
-        this.client = mqtt.connect('mqtt://localhost:1883');
-        //this.client = mqtt.connect('mqtt://mosquitto:1883');
+        // this.client = mqtt.connect('mqtt://localhost:1883');
+        this.client = mqtt.connect('mqtt://mosquitto:1883');
 
         this.client.on('connect', () => {
             console.log('Connected to MQTT broker');

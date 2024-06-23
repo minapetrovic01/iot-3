@@ -8,7 +8,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017/pillowdb'),
-    //MongooseModule.forRoot('mongodb://pillowdb3:27017/pillowdb'),
+    // MongooseModule.forRoot('mongodb://pillowdb3:27017/pillowdb'),
     ScheduleModule.forRoot(),
     SensorModule,
   ],
