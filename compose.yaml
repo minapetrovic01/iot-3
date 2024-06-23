@@ -126,15 +126,13 @@ services:
       - "8888:8080"
     networks:
       - BRIDGE
-  # web_page:
-  #   image: nginx:latest
-  #   container_name: web_page
-  #   volumes:
-  #     - ./Command/mqtttosocket/index.html:/usr/share/nginx/html/index.html
-  #   ports:
-  #     - "80:80"
-  #   networks:
-  #     - BRIDGE
+  web_page:
+    image: web_page
+    container_name: web_page
+    ports:
+      - "80:80"
+    networks:
+      - BRIDGE
 networks:
   BRIDGE:
     driver: bridge
