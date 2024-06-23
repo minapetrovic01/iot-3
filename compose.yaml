@@ -10,7 +10,7 @@ services:
       - 1883:1883
       - 9001:9001
     networks:
-      - iot3
+      - BRIDGE
     stdin_open: true 
     tty: true
   mongodb:
@@ -21,14 +21,14 @@ services:
     volumes:
       - ./data1:/data/db
     networks:
-      - iot3
+      - BRIDGE
   nats-server:
     image: nats
     container_name: nats-server
     ports:
       - "4222:4222"
     networks:
-      - iot3
+      - BRIDGE
   influxdb:
     image: influxdb:2.0
     container_name: influxdb
@@ -45,16 +45,24 @@ services:
     volumes:
       - ./influxdb_data:/var/lib/influxdb2
     networks:
-      - iot3
+      - BRIDGE
   grafana:
     image: grafana/grafana
     container_name: grafana
     ports:
       - "3000:3000"
+    volumes:
+      - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./grafana/provisioning:/etc/grafana/provisioning/
     environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_ORG=mina.org
+      - INFLUXDB_BUCKET=sensor_data
+      - GF_INFLUXDB_TOKEN=mytoken
+      - GF_LOG_LEVEL=debug
       - GF_SECURITY_ADMIN_PASSWORD=admin
     networks:
-      - iot3
+      - BRIDGE
   emanager:
     image: emqx/ekuiper-manager:1.8
     container_name: emanager
@@ -64,12 +72,14 @@ services:
     environment:
       - DEFAULT_EKUIPER_ENDPOINT=http://ekupier:9081
     networks:
-      - iot3
+      - BRIDGE
   ekupier:
     image: lfedge/ekuiper:latest
     ports:
       - "9081:9081"
+      - "127.0.0.1:20498:20498"
     container_name: ekupier
+    hostname: ekupier
     restart: unless-stopped
     user: root
     volumes:
@@ -82,9 +92,9 @@ services:
     depends_on:
       - mosquitto
     networks:
-      - iot3
+      - BRIDGE
 networks:
-  iot3:
+  BRIDGE:
     driver: bridge
     
   # sensor:

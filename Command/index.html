@@ -1,0 +1,69 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stress State Monitor</title>
+  <style>
+    .green {
+      width: 400px;
+      padding: 10px;
+      background-color: #d0ffd0;
+      border: 1px solid green;
+    }
+
+    .red {
+      width: 400px;
+      padding: 10px;
+      background-color: #ffd0d0;
+      border: 1px solid red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stress State Monitor</h1>
+  <div id="stressState" class="green">Stress State: Low</div>
+
+  <script>
+    const socket = new WebSocket('ws://localhost:3003'); // Replace with your WebSocket server URL
+
+    socket.onopen = function() {
+      console.log('Connected to WebSocket server');
+    };
+
+    socket.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      console.log('Message from server:', data);
+
+      const stressStateDiv = document.getElementById('stressState');
+      if (data && typeof data === 'object' && 'stresState' in data) {
+        if (data.stresState > 1) {
+          stressStateDiv.textContent = 'Stress State: High';
+          stressStateDiv.className = 'red';
+        } else {
+          stressStateDiv.textContent = 'Stress State: Low';
+          stressStateDiv.className = 'green';
+        }
+      } else {
+        // Handle other message types or unexpected data
+        stressStateDiv.textContent = 'Received message:';
+        stressStateDiv.className = 'green';
+      }
+
+      // Display entire message content
+      const messageDetailsDiv = document.createElement('div');
+      messageDetailsDiv.textContent = JSON.stringify(data, null, 2);
+      stressStateDiv.appendChild(messageDetailsDiv);
+    };
+
+    socket.onerror = function(error) {
+      console.error('WebSocket error:', error);
+    };
+
+    socket.onclose = function() {
+      console.log('Connection to WebSocket server closed');
+    };
+  </script>
+</body>
+</html>
