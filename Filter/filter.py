@@ -23,7 +23,9 @@ data_window = []
 window_size = 10  # time window size in seconds
 
 
-NATS_URL = "nats://localhost:4222"
+# NATS_URL = "nats://localhost:4222"
+NATS_URL = "nats://nats-server:4222"
+
 NATS_TOPIC = "processed/data"
 
 def on_connect(client, userdata, flags, rc):
@@ -91,8 +93,8 @@ def main():
     client.on_connect = on_connect
     client.on_message = on_message
 
-    # client.connect("mosquitto", 1883, 60)
-    client.connect("localhost", 1883, 60)
+    client.connect("mosquitto", 1883, 60)
+    # client.connect("localhost", 1883, 60)
     client.loop_forever()
 
 

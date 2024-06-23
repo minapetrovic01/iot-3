@@ -103,6 +103,22 @@ services:
       - BRIDGE
     depends_on:
       - mongodb
+  filter:
+    image: filter
+    container_name: filter
+    networks:
+      - BRIDGE
+    depends_on:
+      - mosquitto
+      - nats-server
+  dashboard:
+    image: dashboard
+    container_name: dashboard
+    networks:
+      - BRIDGE
+    depends_on:
+      - influxdb
+      - filter
 
   # command_server:
   #   image: command_image

@@ -5,11 +5,13 @@ from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
 # NATS connection details
-NATS_URL = "nats://localhost:4222"
+# NATS_URL = "nats://localhost:4222"
+NATS_URL = "nats://nats-server:4222"
 NATS_TOPIC = "processed/data"
 
 # InfluxDB connection details
-INFLUXDB_URL = "http://localhost:8086"
+# INFLUXDB_URL = "http://localhost:8086"
+INFLUXDB_URL = "http://influxdb:8086"
 INFLUXDB_TOKEN = "mytoken"
 INFLUXDB_ORG = "mina.org"
 INFLUXDB_BUCKET = "sensor_data"
