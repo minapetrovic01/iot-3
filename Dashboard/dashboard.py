@@ -18,11 +18,9 @@ INFLUXDB_BUCKET = "sensor_data"
 
 async def subscribe_to_nats_and_store_in_influxdb():
     try:
-        # Connect to NATS
         nc = NATS()
         await nc.connect(servers=[NATS_URL])
 
-        # Connect to InfluxDB
         client = InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG)
         write_api = client.write_api(write_options=SYNCHRONOUS)
 
@@ -31,7 +29,6 @@ async def subscribe_to_nats_and_store_in_influxdb():
             payload = msg.data.decode()
             try:
                 data = json.loads(payload)
-                # Prepare data for InfluxDB
                 point = Point("sensor_data") \
                     .tag("sensor_id", data.get("_id")) \
                     .field("avg_snoringRange", data.get("avg_snoringRange")) \
@@ -45,7 +42,6 @@ async def subscribe_to_nats_and_store_in_influxdb():
                     .field("avg_stresState", data.get("avg_stresState")) \
                     .time(data.get("timestamp"))
 
-                # Write data to InfluxDB
                 write_api.write(INFLUXDB_BUCKET, INFLUXDB_ORG, point)
                 print(f"Stored data in InfluxDB: {data}")
 
@@ -54,12 +50,10 @@ async def subscribe_to_nats_and_store_in_influxdb():
             except Exception as e:
                 print(f"Error storing data in InfluxDB: {e}")
 
-        # Subscribe to NATS topic
         await nc.subscribe(NATS_TOPIC, cb=message_handler)
 
         print(f"Subscribed to NATS topic '{NATS_TOPIC}'")
 
-        # Keep the asyncio event loop running
         while True:
             await asyncio.sleep(1)
 

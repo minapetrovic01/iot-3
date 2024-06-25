@@ -60,11 +60,9 @@
     </div>
 
     <script>
-        // const socket = new WebSocket('ws://command_server:8888/'); // WebSocket server URL
-        const socket = new WebSocket('ws://command_server:8888'); 
-
+        // const socket = new WebSocket('ws://command_server:8888/'); 
+        const socket = new WebSocket('ws://command_server:8080'); 
         // const socket = new WebSocket('ws://localhost:8080/');
-
         socket.onopen = () => {
             console.log('WebSocket connected');
         };
@@ -83,17 +81,14 @@
             const previousMessagesDiv = document.getElementById('previousMessages');
 
             if (data && typeof data === 'object' && 'stresState' in data) {
-                // Update current stress state value
                 stressValueSpan.textContent = data.stresState;
 
-                // Adjust background color based on stressState value
                 if (data.stresState > 1) {
                     stressStateDiv.className = 'stress-high';
                 } else {
                     stressStateDiv.className = 'stress-low';
                 }
 
-                // Display current stress state details
                 detailsDiv.innerHTML = `
           <div class="message">
             <div class="message-header">Current Stress State Details:</div>
@@ -111,7 +106,6 @@
           </div>
         `;
 
-                // Add message to previous messages section
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message');
                 messageDiv.innerHTML = `
@@ -128,9 +122,8 @@
             <div>Stress State: ${data.stresState}</div>
           </div>
         `;
-                previousMessagesDiv.prepend(messageDiv); // Display previous messages in reverse order
+                previousMessagesDiv.prepend(messageDiv); 
             } else {
-                // Handle other message types or unexpected data
                 stressValueSpan.textContent = 'Unknown';
                 stressStateDiv.className = 'stress-low';
                 detailsDiv.textContent = 'Received message: ' + JSON.stringify(data, null, 2);
